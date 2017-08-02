@@ -6,11 +6,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-
 @import '../../../node_modules/normalize.css/normalize.css';
 
 /*! React Starter Kit | MIT License | https://www.reactstarterkit.com/ */
-
 @import '../variables.scss';
 
 /*
@@ -20,9 +18,11 @@
 html {
   color: #222;
   font-weight: 100;
-  font-size: 1em; /* ~16px; */
+  font-size: 1em;
+  /* ~16px; */
   font-family: $font-family-base;
-  line-height: 1.375; /* ~22px */
+  line-height: 1.375;
+  /* ~22px */
 }
 
 /*
@@ -32,7 +32,6 @@ html {
  * These selection rule sets have to be separate.
  * Customize the background color to match your design.
  */
-
 ::-moz-selection {
   background: #b3d4fc;
   text-shadow: none;
@@ -92,12 +91,11 @@ textarea {
 /*
  * Browser upgrade prompt
  * ========================================================================== */
-
 :global(.browserupgrade) {
-  margin: 0.2em 0;
+  margin: .2em 0;
   background: #ccc;
   color: #000;
-  padding: 0.2em 0;
+  padding: .2em 0;
 }
 
 /*
@@ -105,13 +103,13 @@ textarea {
  * Inlined to avoid the additional HTTP request:
  * http://www.phpied.com/delay-loading-your-print-css/
  * ========================================================================== */
-
 @media print {
   *,
-  *:before,
-  *:after {
+  *:after,
+  *:before {
     background: transparent !important;
-    color: #000 !important; /* Black prints faster: http://www.sanbeiji.com/archives/953 */
+    color: #000 !important;
+    /* Black prints faster: http://www.sanbeiji.com/archives/953 */
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -133,14 +131,13 @@ textarea {
    * Don't show links that are fragment identifiers,
    * or use the `javascript:` pseudo protocol
    */
-
   a[href^="#"]:after,
   a[href^="javascript:"]:after {
     content: "";
   }
 
-  pre,
-  blockquote {
+  blockquote,
+  pre {
     border: 1px solid #999;
     page-break-inside: avoid;
   }
@@ -154,8 +151,8 @@ textarea {
     display: table-header-group;
   }
 
-  tr,
-  img {
+  img,
+  tr {
     page-break-inside: avoid;
   }
 
@@ -163,9 +160,9 @@ textarea {
     max-width: 100% !important;
   }
 
-  p,
   h2,
-  h3 {
+  h3,
+  p {
     orphans: 3;
     widows: 3;
   }
@@ -174,4 +171,41 @@ textarea {
   h3 {
     page-break-after: avoid;
   }
+}
+
+/*
+* personal style
+*/
+
+// background
+.content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+// stage
+.stage {
+  position: relative;
+  width: 100%;
+  height: 1080px;
+}
+
+// image
+.imageContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #ddd;
+}
+
+// controller
+.controllerContent {
+  position: relative;
+  left: 0;
+  bottom: 30px;
+  z-index: 101;
+  width: 100%;
+  text-align: center;
 }

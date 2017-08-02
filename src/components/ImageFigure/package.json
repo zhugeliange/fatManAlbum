@@ -1,0 +1,6 @@
+{
+  "name": "ImageFigure",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ImageFigure.js"
+}

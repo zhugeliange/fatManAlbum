@@ -11,6 +11,7 @@
   "rules": {
     "no-confusing-arrow": 0,
     "react/jsx-quotes": 0,
-    "jsx-quotes": [2, "prefer-double"]
+    "jsx-quotes": [2, "prefer-double"],
+    "max-lines": 0
   }
 }
