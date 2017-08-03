@@ -1,29 +1,49 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React, { Component, PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ImageFigure.scss';
 
 class ImageFigure extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    if (this.props.state.isCenter) {
+      this.props.setOpposite();
+    } else {
+      this.props.setCenter();
+    }
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
   render() {
-    let range = {
-      left: this.props.range.position.left,
-      top: this.props.range.position.top,
-      transform: `rotate(${this.props.range.rotate}deg)`,
+    let state = {
+      left: this.props.state.position.left,
+      top: this.props.state.position.top,
+      transform: `rotate(${this.props.state.rotate}deg)`,
     };
 
+    if (this.props.state.opposite) {
+      state.transform = 'translate(532px) rotateY(180deg)';
+    }
+
+    if (this.props.state.isCenter) {
+      state.zIndex = 11;
+    }
+
     return (
-      <figure className={s.imageFigure} style={range}>
-        <img src={this.props.fileName} alt={this.props.title} />
+      <figure className={s.imageFigure} style={state} onClick={this.handleClick}>
+        <img src={this.props.data.fileName} alt={this.props.data.title} />
         <figcaption>
-          <h2 className={s.imageTitle}>{this.props.title}</h2>
+          <h2 className={s.imageTitle}>{this.props.data.title}</h2>
+          <div className={s.imageBackground} onClick={this.handleClick}>
+            <p>
+              {this.props.data.description}
+            </p>
+          </div>
         </figcaption>
       </figure>
     );
@@ -31,20 +51,10 @@ class ImageFigure extends Component {
 }
 
 ImageFigure.propTypes = {
-  range: PropTypes.object.isRequired,
-  fileName: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  state: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
+  setOpposite: PropTypes.func.isRequired,
+  setCenter: PropTypes.func.isRequired,
 };
-
-// function ImageFigure(props) {
-//   return (
-//     <figure>
-//       <img src = {props.data.fileName} alt = {props.data.title} />
-//       <figcaption>
-//         <h2>{props.data.title}</h2>
-//       </figcaption>
-//     </figure>
-//   );
-// }
 
 export default withStyles(ImageFigure, s);

@@ -1,19 +1,9 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import emptyFunction from 'fbjs/lib/emptyFunction';
 import s from './App.scss';
 import ImageFigure from '../ImageFigure';
-// import Feedback from '../Feedback';
-// import Footer from '../Footer';
+import ControllerUnit from '../ControllerUnit';
 import data from '../../data.json';
 
 class App extends Component {
@@ -46,6 +36,8 @@ class App extends Component {
             top: 0,
           },
           rotate: 0,
+          opposite: false,
+          isCenter: false,
         },
       },
     };
@@ -111,70 +103,97 @@ class App extends Component {
       },
     };
 
-    const getAreaRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
-
-    const get30DegreeRandom = () => 30 - Math.ceil(Math.random() * 60);
-
-    const reRange = (centerIndex) => {
-      const imageState = Object.keys(this.state.imageState).map((value) => value);
-      const constant = this.constant;
-      const centerPosition = constant.centerPosition;
-      const horizontalPosition = constant.horizontalPosition;
-      const verticalposition = constant.verticalposition;
-      const horizontalPositionLeft = horizontalPosition.left;
-      const horizontalPositionRight = horizontalPosition.right;
-      const horizontalPositionY = horizontalPosition.y;
-      const verticalpositionX = verticalposition.x;
-      const verticalpositionY = verticalposition.y;
-
-      let imageTopArea = [];
-      const imageTopNumber = Math.floor(Math.random() * 2);
-      let imageTopIndex = 0;
-      const imageCenterPosition = imageState.splice(centerIndex, 1);
-      imageCenterPosition[0] = {
-        position: centerPosition,
-        rotate: 0,
-      };
-
-      imageTopIndex = Math.floor(Math.random() * (imageState.length - imageTopNumber));
-      imageTopArea = imageState.splice(imageTopIndex, imageTopNumber);
-
-      imageTopArea.forEach((value, index) => {
-        imageTopArea[index] = {
-          position: {
-            left: getAreaRandom(verticalpositionX[0], verticalpositionX[1]),
-            top: getAreaRandom(verticalpositionY[0], verticalpositionY[1]),
-          },
-          rotate: get30DegreeRandom(),
-        };
-      });
-
-      for (let i = 0, j = imageState.length, k = j / 2; i < j; i++) {
-        const horizontalPositionLeftOrRight = (i < k) ? horizontalPositionLeft : horizontalPositionRight;
-
-        imageState[i] = {
-          position: {
-            left: getAreaRandom(horizontalPositionLeftOrRight[0], horizontalPositionLeftOrRight[1]),
-            top: getAreaRandom(horizontalPositionY[0], horizontalPositionY[1]),
-          },
-          rotate: get30DegreeRandom(),
-        };
-      }
-
-      if (imageTopArea && imageTopArea[0]) {
-        imageState.splice(imageTopIndex, 0, imageState[0]);
-      }
-
-      imageState.splice(centerIndex, 0, imageCenterPosition[0]);
-
-      this.setState({ imageState: imageState });
-    };
-
-    reRange(0);
+    this.reRange(0);
   }
 
   componentWillUnmount() {
     this.removeCss();
+  }
+
+  getAreaRandom(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  get30DegreeRandom() {
+    return 30 - Math.ceil(Math.random() * 60);
+  }
+
+  setCenter(index) {
+    return () => this.reRange(index);
+  }
+
+  setOpposite(index) {
+    return () => {
+      const imageState = this.state.imageState;
+      imageState[index].opposite = !this.state.imageState[index].opposite;
+      this.setState({ imageState: imageState });
+    };
+  }
+
+  reRange(centerIndex) {
+    const imageState = Object.keys(this.state.imageState).map((value) => value);
+    const constant = this.constant;
+    const centerPosition = constant.centerPosition;
+    const horizontalPosition = constant.horizontalPosition;
+    const verticalposition = constant.verticalposition;
+    const horizontalPositionLeft = horizontalPosition.left;
+    const horizontalPositionRight = horizontalPosition.right;
+    const horizontalPositionY = horizontalPosition.y;
+    const verticalpositionX = verticalposition.x;
+    const verticalpositionY = verticalposition.y;
+
+    let imageTopArea = [];
+    const imageTopNumber = Math.floor(Math.random() * 2);
+    let imageTopIndex = 0;
+    const imageCenterPosition = imageState.splice(centerIndex, 1);
+    imageCenterPosition[0] = {
+      position: centerPosition,
+      rotate: 0,
+      opposite: false,
+      isCenter: true,
+    };
+
+    imageTopIndex = Math.floor(Math.random() * (imageState.length - imageTopNumber));
+    imageTopArea = imageState.splice(imageTopIndex, imageTopNumber);
+
+    imageTopArea.forEach((value, index) => {
+      imageTopArea[index] = {
+        position: {
+          left: this.getAreaRandom(verticalpositionX[0],
+            verticalpositionX[1]),
+          top: this.getAreaRandom(verticalpositionY[0],
+            verticalpositionY[1]),
+        },
+        rotate: this.get30DegreeRandom(),
+        opposite: false,
+        isCenter: false,
+      };
+    });
+
+    for (let i = 0, j = imageState.length, k = j / 2; i < j; i++) {
+      const horizontalPositionLeftOrRight = (i < k)
+      ? horizontalPositionLeft : horizontalPositionRight;
+
+      imageState[i] = {
+        position: {
+          left: this.getAreaRandom(horizontalPositionLeftOrRight[0],
+            horizontalPositionLeftOrRight[1]),
+          top: this.getAreaRandom(horizontalPositionY[0],
+            horizontalPositionY[1]),
+        },
+        rotate: this.get30DegreeRandom(),
+        opposite: false,
+        isCenter: false,
+      };
+    }
+
+    if (imageTopArea && imageTopArea[0]) {
+      imageState.splice(imageTopIndex, 0, imageState[0]);
+    }
+
+    imageState.splice(centerIndex, 0, imageCenterPosition[0]);
+
+    this.setState({ imageState: imageState });
   }
 
   render() {
@@ -189,10 +208,24 @@ class App extends Component {
             top: 0,
           },
           rotate: 0,
+          opposite: false,
+          isCenter: false,
         };
       }
 
-      imageFigures.push(<ImageFigure key={index} range={this.state.imageState[index]} fileName={value.fileName} title={value.title} ref={`imageFigure${index}`} />);
+      imageFigures.push(<ImageFigure key={index}
+        state={this.state.imageState[index]}
+        data={value}
+        ref={`imageFigure${index}`}
+        setOpposite={this.setOpposite(index)}
+        setCenter={this.setCenter(index)}
+      />);
+
+      controllerUnits.push(<ControllerUnit key={index}
+        state={this.state.imageState[index]}
+        setOpposite={this.setOpposite(index)}
+        setCenter={this.setCenter(index)}
+      />);
     });
 
     return !this.props.error ? (
